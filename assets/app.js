@@ -518,6 +518,10 @@ function buildTOC() {
         window.__tocProgrammaticUntil = Date.now() + 600;
         el.scrollIntoView({ behavior: 'auto', block: 'start' });
       }
+      if (document.body.classList.contains('show-toc')) {
+        document.body.classList.remove('show-toc');
+        document.body.style.overflow = '';
+      }
     };
     li.appendChild(row);
     parent.ul.appendChild(li);
@@ -668,13 +672,23 @@ function setupTopActions() {
 function setupMenuToggle() {
   const btn = document.getElementById('menu-toggle');
   const overlay = document.getElementById('mobile-overlay');
-  if (btn) btn.onclick = () => { document.body.classList.toggle('show-sidebar'); };
-  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); document.body.classList.remove('show-toc'); };
+  if (btn) btn.onclick = () => {
+    const willShow = !document.body.classList.contains('show-sidebar');
+    document.body.classList.toggle('show-sidebar');
+    document.body.style.overflow = willShow ? 'hidden' : '';
+  };
+  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); document.body.classList.remove('show-toc'); document.body.style.overflow = ''; };
 }
 
 function setupTocToggle() {
   const btn = document.getElementById('toc-toggle');
-  if (btn) btn.onclick = () => { document.body.classList.toggle('show-toc'); };
+  if (btn) btn.onclick = () => {
+    const willShow = !document.body.classList.contains('show-toc');
+    document.body.classList.toggle('show-toc');
+    const toc = document.getElementById('toc');
+    if (toc && willShow) toc.scrollTop = 0;
+    document.body.style.overflow = willShow ? 'hidden' : '';
+  };
 }
 
 async function ensureSearchIndex() {
