@@ -5,6 +5,7 @@ const state = {
   current: { categoryId: null, pageId: null },
   searchIndex: null,
 };
+const VERSION = '20251130-01';
 
 function getPreferredTheme() {
   const t = localStorage.getItem('theme');
@@ -25,16 +26,16 @@ function applyTheme(t) {
   const logo = document.getElementById('site-logo');
   if (logo) {
     const preferGif = localStorage.getItem('logoType') === 'gif';
-    if (preferGif) logo.src = 'assets/android-badge.gif';
-    else logo.src = t === 'dark' ? 'assets/android-badge-dark.svg' : 'assets/android-badge-light.svg';
+    if (preferGif) logo.src = 'assets/android-badge.gif?v=' + VERSION;
+    else logo.src = (t === 'dark' ? 'assets/android-badge-dark.svg' : 'assets/android-badge-light.svg') + '?v=' + VERSION;
   }
   const fav = document.getElementById('favicon');
   if (fav) {
     const preferGif = localStorage.getItem('logoType') === 'gif';
-    fav.href = preferGif ? 'assets/android-badge.gif' : (t === 'dark' ? 'assets/android-badge-dark.svg' : 'assets/android-badge-light.svg');
+    fav.href = preferGif ? ('assets/android-badge.gif?v=' + VERSION) : ((t === 'dark' ? 'assets/android-badge-dark.svg' : 'assets/android-badge-light.svg') + '?v=' + VERSION);
   }
   document.querySelectorAll('#bc-home').forEach(img => {
-    img.src = t === 'dark' ? 'assets/home-dark.svg' : 'assets/home-light.svg';
+    img.src = (t === 'dark' ? 'assets/home-dark.svg' : 'assets/home-light.svg') + '?v=' + VERSION;
   });
 }
 
@@ -58,7 +59,7 @@ async function loadManifest() {
     try { data = JSON.parse(override); } catch { data = null; }
   }
   if (!data) {
-    const res = await fetch('content/index.json');
+    const res = await fetch('content/index.json?v=' + VERSION, { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } });
     if (!res.ok) throw new Error('无法加载内容清单 index.json');
     data = await res.json();
   }
@@ -169,7 +170,7 @@ async function loadDoc(catId, pageId) {
   if (!page) return;
   const key = `${catId}/${pageId}`;
   if (!state.docCache[key]) {
-    const res = await fetch(`content/${page.file}`);
+    const res = await fetch(`content/${page.file}?v=${VERSION}`, { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } });
     if (!res.ok) throw new Error(`无法加载文档 ${page.file}`);
     const md = await res.text();
     state.docCache[key] = md;
@@ -461,6 +462,14 @@ async function main() {
   setupLightbox();
   setupTopActions();
   setupMenuToggle();
+  if ('serviceWorker' in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.register('assets/sw.js');
+    } catch {}
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      location.reload();
+    });
+  }
 }
 
 function slugify(text) {
@@ -669,7 +678,7 @@ async function ensureSearchIndex() {
   }
   const index = [];
   for (const it of list) {
-    const res = await fetch(`content/${it.file}`);
+    const res = await fetch(`content/${it.file}?v=${VERSION}`, { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } });
     const md = await res.text();
     const tokens = marked.lexer(md);
     let lastHeadingId = null;
@@ -727,6 +736,12 @@ function setActiveTOC(id) {
   if (target) target.parentElement.classList.add('active');
 }
 
+function withVersion(u) {
+  if (!u) return u;
+  if (/^https?:\/\//.test(u)) return u;
+  return u + (u.includes('?') ? '&' : '?') + 'v=' + VERSION;
+}
+
 function ensureContentPath(src) {
   if (!src) return src;
   if (/^https?:\/\//.test(src)) return src;
@@ -757,7 +772,7 @@ function enhanceMedia() {
   const imgs = Array.from(body.querySelectorAll('img'));
   imgs.forEach(img => {
     img.loading = 'lazy';
-    img.src = ensureContentPath(img.getAttribute('src'));
+    img.src = withVersion(ensureContentPath(img.getAttribute('src')));
     const alt = img.getAttribute('alt');
     const fig = document.createElement('figure');
     const parent = img.parentElement;
