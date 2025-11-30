@@ -1,0 +1,79 @@
+{
+  "categories": [
+    {
+      "id": "intro",
+      "title": "写在开头",
+      "pages": [
+        {"id": "preface", "title": "写在开头", "file": "intro/preface.md", "summary": "网站简介、导航与贡献指南"}
+      ]
+    },
+    {
+      "id": "android-basics",
+      "title": "Android基础",
+      "pages": [
+        {"id": "overview", "title": "总览", "file": "android-basics/overview.md", "summary": "Android 系统架构与四大组件"},
+        {"id": "components", "title": "四大组件", "file": "android-basics/components.md", "summary": "Activity/Service/BroadcastReceiver/ContentProvider"}
+      ]
+    },
+    {
+      "id": "kotlin",
+      "title": "Kotlin",
+      "pages": [
+        {"id": "coroutines", "title": "协程基础", "file": "kotlin/coroutines.md", "summary": "CoroutineScope、Job、Dispatcher 与结构化并发"}
+      ]
+    },
+    {
+      "id": "jetpack",
+      "title": "Jetpack",
+      "pages": [
+        {"id": "compose", "title": "Compose 入门", "file": "jetpack/compose.md", "summary": "声明式 UI、可组合函数、状态与重组",
+          "children": [
+            {"id": "compose-ui-components", "title": "2. 常用的 UI 组件", "file": "jetpack/compose/ui-components.md", "summary": "Text、Button、Image、Card、LazyColumn 等常用组件"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ui",
+      "title": "UI 设计与布局",
+      "pages": [
+        {"id": "layouts", "title": "布局体系", "file": "ui/layouts.md", "summary": "ConstraintLayout、RecyclerView 与自定义 View"}
+      ]
+    },
+    {
+      "id": "architecture",
+      "title": "架构模式",
+      "pages": [
+        {"id": "mvvm", "title": "MVVM 实战", "file": "architecture/mvvm.md", "summary": "ViewModel、LiveData/Flow、Repository、UseCase"}
+      ]
+    },
+    {
+      "id": "performance",
+      "title": "性能与质量",
+      "pages": [
+        {"id": "startup", "title": "启动优化", "file": "performance/startup.md", "summary": "冷启动/热启动、启动阶段拆分与任务编排"}
+      ]
+    },
+    {
+      "id": "ndk",
+      "title": "NDK 与原生",
+      "pages": [
+        {"id": "intro", "title": "NDK 入门", "file": "ndk/intro.md", "summary": "C/C++、JNI、CMake 与交互"}
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "开发工具",
+      "pages": [
+        {"id": "adb", "title": "ADB 高效使用", "file": "tools/adb.md", "summary": "常用命令、端口转发、日志与调试"}
+      ]
+    },
+    {
+      "id": "interview",
+      "title": "面试与题库",
+      "pages": [
+        {"id": "questions", "title": "高频题目", "file": "interview/questions.md", "summary": "线程、内存、绘制、Binder、协程、Compose"}
+      ]
+    }
+  ]
+}

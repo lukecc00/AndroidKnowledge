@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="800" height="480" fill="url(#g)"/>
+  <rect x="40" y="40" width="720" height="400" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="60" y="90" font-family="monospace" font-size="20" fill="#334155">@Preview</text>
+  <text x="60" y="120" font-family="monospace" font-size="20" fill="#334155">@Composable</text>
+  <text x="60" y="150" font-family="monospace" font-size="20" fill="#ef4444">fun</text>
+  <text x="120" y="150" font-family="monospace" font-size="20" fill="#2563eb">Demo()</text>
+  <text x="60" y="180" font-family="monospace" font-size="20" fill="#334155">{</text>
+  <text x="80" y="210" font-family="monospace" font-size="20" fill="#2563eb">var</text>
+  <text x="120" y="210" font-family="monospace" font-size="20" fill="#334155">text by remember { mutableStateOf("") }</text>
+  <text x="80" y="240" font-family="monospace" font-size="20" fill="#2563eb">Column(</text>
+  <text x="120" y="270" font-family="monospace" font-size="20" fill="#334155">modifier = Modifier.fillMaxWidth()</text>
+  <text x="80" y="300" font-family="monospace" font-size="20" fill="#2563eb">) {</text>
+  <text x="120" y="330" font-family="monospace" font-size="20" fill="#ef4444">TextField(</text>
+  <text x="140" y="360" font-family="monospace" font-size="20" fill="#334155">value = text</text>
+  <text x="120" y="390" font-family="monospace" font-size="20" fill="#334155">)</text>
+  <text x="60" y="420" font-family="monospace" font-size="20" fill="#334155">}</text>
+</svg>

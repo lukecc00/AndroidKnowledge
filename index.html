@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Android 知识库</title>
+    <meta name="description" content="可在 GitHub Pages 部署的 Android 知识分享网站" />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <link id="favicon" rel="icon" href="assets/android-badge-light.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/android-badge-light.svg" />
+    <link id="hljs-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/a11y-light.min.css" />
+    <link id="hljs-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/androidstudio.min.css" disabled />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img class="logo" id="site-logo" src="assets/android-badge-light.svg" alt="Android" />
+        <h1>Android 知识库</h1>
+      </div>
+      <div class="search-box">
+        <button id="theme-toggle" class="nav-btn" title="切换日间/夜间">🌗</button>
+        <input id="search-input" type="search" placeholder="搜索知识、术语或页面…" aria-label="搜索" />
+      </div>
+    </header>
+
+    <main class="site-main">
+      <nav class="sidebar" id="sidebar"></nav>
+      <article class="content" id="content">
+        <nav id="breadcrumb" class="breadcrumb"></nav>
+        <div id="doc-title" class="doc-title"></div>
+        <div id="index-cards" class="cards" hidden></div>
+        <div id="doc-body" class="doc-body"></div>
+        <div id="bottom-nav" class="bottom-nav" hidden>
+          <a id="bottom-prev" class="bottom-card left" href="#" aria-label="上一页"></a>
+          <a id="bottom-next" class="bottom-card right" href="#" aria-label="下一页"></a>
+        </div>
+        <div id="search-results" class="search-results" hidden></div>
+      </article>
+      <aside class="toc" id="toc"></aside>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <span>Android知识记录 · Lukecc0</span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>
