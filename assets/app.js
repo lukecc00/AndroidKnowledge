@@ -198,12 +198,8 @@ async function loadDoc(catId, pageId) {
   state.current = { categoryId: catId, pageId };
   const tocEl = document.getElementById('toc');
   if (tocEl) {
-    if (catId === 'intro') {
-      tocEl.style.display = 'none';
-    } else {
-      tocEl.style.display = '';
-      buildTOC();
-    }
+    tocEl.style.display = '';
+    buildTOC();
   }
   renderSidebar();
   updatePrevNext(catId, pageId);
