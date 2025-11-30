@@ -208,8 +208,7 @@ async function loadDoc(catId, pageId) {
   renderSidebar();
   updatePrevNext(catId, pageId);
   window.scrollTo({ top: 0, behavior: 'auto' });
-  document.body.classList.remove('show-sidebar');
-  document.body.style.overflow = '';
+  // keep sidebar state across navigation on mobile
   if (window.__pendingSearchTerm) {
     if (window.__pendingAnchor) {
       ensureSectionVisible(window.__pendingAnchor);
@@ -466,7 +465,7 @@ async function main() {
   // mobile TOC disabled
   if ('serviceWorker' in navigator) {
     try {
-      const reg = await navigator.serviceWorker.register('assets/sw.js');
+      const reg = await navigator.serviceWorker.register('assets/sw.js', { scope: '/' });
     } catch {}
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       location.reload();
@@ -592,8 +591,7 @@ async function loadCategoryIndex(catId) {
   renderSidebar();
   updatePrevNextForCategory(catId);
   window.scrollTo({ top: 0, behavior: 'auto' });
-  document.body.classList.remove('show-sidebar');
-  document.body.style.overflow = '';
+  // keep sidebar state across navigation on mobile
 }
 
 function setupCategoryCards(catId) {
