@@ -110,10 +110,11 @@ body {
 .site-footer { padding: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--muted); background: var(--panel); }
 
 @media (max-width: 980px) {
+  .site-header { gap: 15px; }
   .site-main { grid-template-columns: 1fr; }
   .brand h1 { display: none; }
   .search-box { flex: 1; gap: 8px; }
-  .search-box input { width: 100%; max-width: 100%; }
+  .search-box input { flex: 0 1 68vw; width: auto; max-width: 68vw; }
   .content { padding: 16px; max-width: 100%; }
   .doc-body { padding-bottom: 24px; }
   .doc-body h1, .doc-body h2 { margin-top: 18px; }
@@ -130,7 +131,7 @@ body {
   .brand .logo { width: 36px; height: 36px; padding: 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
   /* Ensure theme toggle emoji centered and sized */
   #theme-toggle.icon-btn { font-size: 18px; line-height: 1; }
-}
+  /* Mobile tables and code */
   .doc-body table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .doc-body pre code { white-space: pre-wrap; word-break: break-word; }
   .doc-body ul, .doc-body ol { padding-left: 20px; }
