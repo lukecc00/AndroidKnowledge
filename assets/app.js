@@ -5,7 +5,7 @@ const state = {
   current: { categoryId: null, pageId: null },
   searchIndex: null,
 };
-const VERSION = '20251130-01';
+let VERSION = '20251130-01';
 
 function getPreferredTheme() {
   const t = localStorage.getItem('theme');
@@ -452,6 +452,7 @@ function ensureSectionVisible(id) {
 }
 
 async function main() {
+  await loadVersion();
   await loadManifest();
   renderSidebar();
   await handleRoute();
@@ -471,6 +472,16 @@ async function main() {
       location.reload();
     });
   }
+}
+
+async function loadVersion() {
+  try {
+    const res = await fetch('assets/version.json', { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.version) VERSION = String(data.version);
+    }
+  } catch {}
 }
 
 function slugify(text) {
