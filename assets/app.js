@@ -209,7 +209,6 @@ async function loadDoc(catId, pageId) {
   updatePrevNext(catId, pageId);
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.body.classList.remove('show-sidebar');
-  document.body.classList.remove('show-toc');
   document.body.style.overflow = '';
   if (window.__pendingSearchTerm) {
     if (window.__pendingAnchor) {
@@ -464,7 +463,7 @@ async function main() {
   setupLightbox();
   setupTopActions();
   setupMenuToggle();
-  setupTocToggle();
+  // mobile TOC disabled
   if ('serviceWorker' in navigator) {
     try {
       const reg = await navigator.serviceWorker.register('assets/sw.js');
@@ -518,10 +517,7 @@ function buildTOC() {
         window.__tocProgrammaticUntil = Date.now() + 600;
         el.scrollIntoView({ behavior: 'auto', block: 'start' });
       }
-      if (document.body.classList.contains('show-toc')) {
-        document.body.classList.remove('show-toc');
-        document.body.style.overflow = '';
-      }
+      // mobile TOC disabled
     };
     li.appendChild(row);
     parent.ul.appendChild(li);
@@ -597,7 +593,6 @@ async function loadCategoryIndex(catId) {
   updatePrevNextForCategory(catId);
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.body.classList.remove('show-sidebar');
-  document.body.classList.remove('show-toc');
   document.body.style.overflow = '';
 }
 
@@ -677,19 +672,10 @@ function setupMenuToggle() {
     document.body.classList.toggle('show-sidebar');
     document.body.style.overflow = willShow ? 'hidden' : '';
   };
-  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); document.body.classList.remove('show-toc'); document.body.style.overflow = ''; };
+  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); document.body.style.overflow = ''; };
 }
 
-function setupTocToggle() {
-  const btn = document.getElementById('toc-toggle');
-  if (btn) btn.onclick = () => {
-    const willShow = !document.body.classList.contains('show-toc');
-    document.body.classList.toggle('show-toc');
-    const toc = document.getElementById('toc');
-    if (toc && willShow) toc.scrollTop = 0;
-    document.body.style.overflow = willShow ? 'hidden' : '';
-  };
-}
+/* TOC mobile toggle removed */
 
 async function ensureSearchIndex() {
   if (state.searchIndex) return;

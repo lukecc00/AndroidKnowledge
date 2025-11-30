@@ -115,28 +115,24 @@ body {
   .search-box { flex: 1; gap: 8px; }
   .search-box input { width: 100%; max-width: 100%; }
   .content { padding: 16px; max-width: 100%; }
-  /* TOC drawer on mobile */
-  .toc { position: fixed; right: 0; top: 60px; width: 82vw; max-width: 320px; height: calc(100vh - 60px); box-shadow: -2px 0 12px rgba(0,0,0,.12); transform: translateX(100%); transition: transform .24s ease; z-index: 32; overflow: auto; pointer-events: none; background: var(--panel); border-left: 1px solid var(--border); }
-  .show-toc .toc { transform: translateX(0); pointer-events: auto; }
+  .toc { display: none; }
   .sidebar { position: fixed; left: 0; top: 60px; width: 82vw; max-width: 320px; height: calc(100vh - 60px); box-shadow: 2px 0 12px rgba(0,0,0,.12); transform: translateX(-100%); transition: transform .24s ease; z-index: 32; overflow: auto; pointer-events: none; }
   .show-sidebar .sidebar { transform: translateX(0); }
   .show-sidebar .sidebar { pointer-events: auto; }
   .doc-body pre { white-space: pre-wrap; word-break: break-word; }
   .breadcrumb { flex-wrap: wrap; }
   .bottom-nav { grid-template-columns: 1fr; }
-  /* Mobile-only show menu & toc buttons */
-  #menu-toggle, #toc-toggle { display: inline-flex; }
+  /* Mobile-only show menu button */
+  #menu-toggle { display: inline-flex; }
   .doc-body table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .doc-body pre code { white-space: pre-wrap; word-break: break-word; }
   .doc-body ul, .doc-body ol { padding-left: 20px; }
 }
 
 .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; z-index: 20; }
-.show-sidebar .mobile-overlay, .show-toc .mobile-overlay { display: block; }
+.show-sidebar .mobile-overlay { display: block; }
 
-@media (min-width: 981px) {
-  #menu-toggle, #toc-toggle { display: none; }
-}
+@media (min-width: 981px) { #menu-toggle { display: none; } }
 .toc { border-left: 1px solid var(--border); padding: 16px; background: var(--panel); position: sticky; top: 60px; height: calc(100vh - 60px); overflow: auto; }
 .toc h2 { margin: 6px 0 10px; font-size: 13px; color: var(--muted); text-transform: capitalize; letter-spacing: .02em; }
 .toc .toc-list { list-style: none; padding: 0; margin: 0; }
