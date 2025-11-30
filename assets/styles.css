@@ -88,7 +88,8 @@ body {
 .doc-title { font-size: 24px; font-weight: 700; margin-bottom: 14px; }
 .doc-body { line-height: 1.8; }
 .doc-body code { background: var(--code-bg); padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border); }
-.doc-body pre { background: var(--code-bg); padding: 14px; overflow: auto; border-radius: 10px; border: 1px solid var(--border); }
+.doc-body pre { background: none; padding: 0; overflow: auto; border-radius: 0; border: none; }
+.doc-body pre code { display: block; background: var(--code-bg); padding: 14px; border-radius: 10px; border: none; }
 .doc-body h2, .doc-body h3 { margin-top: 24px; }
 
 .doc-body img { max-width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); display: block; margin: 10px 0; }
@@ -137,7 +138,6 @@ body {
   .doc-body table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .doc-body pre code { white-space: pre-wrap; word-break: break-word; }
   .doc-body ul, .doc-body ol { padding-left: 20px; }
-}
 
 @media (max-width: 420px) {
   .site-header { gap: 10px; padding: 10px 12px; }

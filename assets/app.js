@@ -6,6 +6,7 @@ const state = {
   searchIndex: null,
 };
 let VERSION = '20251130-01';
+let MD = null;
 
 function getPreferredTheme() {
   const t = localStorage.getItem('theme');
@@ -181,9 +182,10 @@ async function loadDoc(catId, pageId) {
   const resultsEl = document.getElementById('search-results');
   resultsEl.hidden = true;
   titleEl.textContent = page.title;
-  bodyEl.innerHTML = marked.parse(md);
+  bodyEl.innerHTML = MD ? MD.render(md) : md;
   bodyEl.style.display = '';
-  if (window.hljs) window.hljs.highlightAll();
+  // ensure highlight.js theme applies by adding hljs class to code blocks
+  Array.from(bodyEl.querySelectorAll('pre code')).forEach(el => el.classList.add('hljs'));
   makeCollapsibleSections();
   enhanceMedia();
   renderBreadcrumb(catId, page);
@@ -697,22 +699,28 @@ async function ensureSearchIndex() {
   for (const it of list) {
     const res = await fetch(`content/${it.file}?v=${VERSION}`, { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } });
     const md = await res.text();
-    const tokens = marked.lexer(md);
+    const tokens = MD ? MD.parse(md, {}) : [];
     let lastHeadingId = null;
     index.push({ type: 'title', text: it.pageTitle, anchorId: null, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
-    tokens.forEach(tok => {
-      if (tok.type === 'heading') {
-        const id = slugify(tok.text || '');
+    for (let i = 0; i < tokens.length; i++) {
+      const tok = tokens[i];
+      if (tok.type === 'heading_open') {
+        const inline = tokens[i + 1];
+        const text = inline && inline.type === 'inline' ? inline.content : '';
+        const id = slugify(text || '');
         lastHeadingId = id;
-        index.push({ type: 'heading', text: tok.text || '', anchorId: id, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
-      } else if (tok.type === 'paragraph' || tok.type === 'text') {
-        const t = typeof tok.text === 'string' ? tok.text.replace(/[#*_`>\-]/g, ' ') : '';
+        index.push({ type: 'heading', text, anchorId: id, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
+      } else if (tok.type === 'paragraph_open') {
+        const inline = tokens[i + 1];
+        const text = inline && inline.type === 'inline' ? inline.content : '';
+        const t = typeof text === 'string' ? text : '';
         if (t.trim()) index.push({ type: 'paragraph', text: t, anchorId: lastHeadingId, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
-      } else if (tok.type === 'list') {
-        const t = (tok.items || []).map(i => i.text).join(' ');
-        if (t.trim()) index.push({ type: 'paragraph', text: t, anchorId: lastHeadingId, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
+      } else if (tok.type === 'list_item_open') {
+        const inline = tokens[i + 2];
+        const text = inline && inline.type === 'inline' ? inline.content : '';
+        if ((text || '').trim()) index.push({ type: 'paragraph', text, anchorId: lastHeadingId, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
       }
-    });
+    }
   }
   state.searchIndex = index;
 }
@@ -840,20 +848,22 @@ function updatePrevNextForCategory(catId) {
   bottom.style.justifyContent = (visiblePrev && visibleNext) ? 'space-between' : (visibleNext ? 'flex-end' : 'flex-start');
 }
 function setupMarkdown() {
-  if (typeof marked !== 'undefined') {
-    marked.setOptions({
-      langPrefix: 'language-',
-      highlight: (code, lang) => {
+  if (typeof window.markdownit !== 'undefined') {
+    MD = window.markdownit({
+      html: false,
+      linkify: true,
+      typographer: true,
+      highlight: (str, lang) => {
         if (typeof hljs !== 'undefined') {
           try {
             if (lang && hljs.getLanguage(lang)) {
-              return hljs.highlight(code, { language: lang }).value;
+              return hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
             }
-            return hljs.highlightAuto(code).value;
-          } catch (e) { return code; }
+            return hljs.highlightAuto(str).value;
+          } catch (e) { return str; }
         }
-        return code;
-      },
+        return str;
+      }
     });
   }
 }
