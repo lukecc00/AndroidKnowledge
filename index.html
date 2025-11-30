@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Android 知识库</title>
+    <title>菜鸟的Android知识博物馆</title>
     <meta name="description" content="可在 GitHub Pages 部署的 Android 知识分享网站" />
     <link rel="stylesheet" href="assets/styles.css" />
     <link id="favicon" rel="icon" href="assets/android-badge-light.svg" type="image/svg+xml" />
@@ -16,10 +16,20 @@
   <body>
     <header class="site-header">
       <div class="brand">
+        <button id="menu-toggle" class="nav-btn icon-btn" aria-label="菜单">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z" />
+          </svg>
+        </button>
         <img class="logo" id="site-logo" src="assets/android-badge-light.svg" alt="Android" />
-        <h1>Android 知识库</h1>
+        <h1>菜鸟的Android知识博物馆</h1>
       </div>
       <div class="search-box">
+        <a id="github-link" class="nav-btn icon-btn" href="https://github.com/lukecc00/AndroidKnowledge/tree/main" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5C5.73.5.5 5.73.5 12A11.5 11.5 0 0 0 8.35 22.95c.58.1.8-.25.8-.56v-2.1c-3.19.7-3.86-1.54-3.86-1.54-.53-1.35-1.3-1.71-1.3-1.71-1.06-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.77 2.72 1.26 3.38.96.1-.76.41-1.26.74-1.54-2.55-.29-5.23-1.27-5.23-5.66 0-1.25.45-2.27 1.2-3.07-.12-.3-.52-1.53.12-3.18 0 0 .98-.31 3.2 1.17.94-.26 1.93-.39 2.92-.39s1.98.13 2.92.39c2.22-1.48 3.2-1.17 3.2-1.17.64 1.65.24 2.88.12 3.18.75.8 1.2 1.82 1.2 3.07 0 4.4-2.69 5.36-5.25 5.64.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/>
+          </svg>
+        </a>
         <button id="theme-toggle" class="nav-btn" title="切换日间/夜间">🌗</button>
         <input id="search-input" type="search" placeholder="搜索知识、术语或页面…" aria-label="搜索" />
       </div>
@@ -40,6 +50,8 @@
       </article>
       <aside class="toc" id="toc"></aside>
     </main>
+
+    <div id="mobile-overlay" class="mobile-overlay"></div>
 
     <footer class="site-footer">
       <div>

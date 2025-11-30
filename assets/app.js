@@ -3,6 +3,7 @@ const state = {
   categoryIndex: {},
   docCache: {},
   current: { categoryId: null, pageId: null },
+  searchIndex: null,
 };
 
 function getPreferredTheme() {
@@ -206,6 +207,17 @@ async function loadDoc(catId, pageId) {
   renderSidebar();
   updatePrevNext(catId, pageId);
   window.scrollTo({ top: 0, behavior: 'auto' });
+  document.body.classList.remove('show-sidebar');
+  if (window.__pendingSearchTerm) {
+    if (window.__pendingAnchor) {
+      ensureSectionVisible(window.__pendingAnchor);
+      const el = document.getElementById(window.__pendingAnchor);
+      if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+    highlightInDoc(window.__pendingSearchTerm);
+    window.__pendingAnchor = null;
+    window.__pendingSearchTerm = null;
+  }
 }
 
 function updatePrevNext(catId, pageId) {
@@ -287,57 +299,72 @@ async function performSearch(q) {
   const titleEl = document.getElementById('doc-title');
   if (!input) {
     resultsEl.hidden = true;
+    const bc = document.getElementById('breadcrumb');
+    if (bc) bc.innerHTML = '';
+    // 恢复当前视图
+    if (state.current && state.current.categoryId) {
+      if (state.current.pageId) {
+        await loadDoc(state.current.categoryId, state.current.pageId);
+      } else {
+        await loadCategoryIndex(state.current.categoryId);
+      }
+    } else {
+      await handleRoute();
+    }
     return;
   }
+  await ensureSearchIndex();
   const nq = normalizeText(input);
-  const results = [];
-  for (const cat of state.manifest.categories) {
-    for (const p of cat.pages) {
-      const titleHit = normalizeText(p.title).includes(nq);
-      let snippet = p.summary || '';
-      let contentHit = false;
-      // try content search lazily
-      try {
-        const res = await fetch(`content/${p.file}`);
-        const md = await res.text();
-        const plain = md.replace(/[#*_`>\-]/g, ' ');
-        contentHit = normalizeText(plain).includes(nq);
-        if (contentHit) {
-          const idx = plain.toLowerCase().indexOf(input.toLowerCase());
-          snippet = plain.substring(Math.max(0, idx - 50), idx + 80).trim();
-        }
-      } catch (e) { /* ignore */ }
-      if (titleHit || contentHit) {
-        results.push({ catId: cat.id, pageId: p.id, title: p.title, snippet });
-      }
+  const re = new RegExp(input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  const matches = [];
+  for (const seg of state.searchIndex) {
+    const hit = normalizeText(seg.text).includes(nq);
+    if (hit) {
+      let snippet = seg.text;
+      const idx = seg.text.toLowerCase().indexOf(input.toLowerCase());
+      const start = Math.max(0, idx - 40);
+      const end = Math.min(seg.text.length, idx + input.length + 60);
+      snippet = (start > 0 ? '…' : '') + seg.text.substring(start, end) + (end < seg.text.length ? '…' : '');
+      const highlighted = snippet.replace(re, m => `<mark>${m}</mark>`);
+      matches.push({
+        catId: seg.catId,
+        pageId: seg.pageId,
+        pageTitle: seg.pageTitle,
+        scope: seg.type === 'title' ? '标题' : (seg.type === 'heading' ? '段落' : '内容'),
+        anchorId: seg.anchorId,
+        snippetHtml: highlighted,
+      });
     }
   }
-  // Render results
   titleEl.textContent = `搜索：${input}`;
   bodyEl.innerHTML = '';
   resultsEl.innerHTML = '';
-  document.getElementById('doc-toolbar').hidden = true;
+  const toolbar = document.getElementById('doc-toolbar'); if (toolbar) toolbar.hidden = true;
   document.getElementById('bottom-nav').hidden = true;
   const bc = document.getElementById('breadcrumb');
   if (bc) bc.innerHTML = `<span class="current">搜索结果</span>`;
-  if (results.length === 0) {
+  if (matches.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'result-item';
     empty.textContent = '未找到相关内容';
     resultsEl.appendChild(empty);
   } else {
-    results.forEach(r => {
+    matches.forEach(r => {
       const item = document.createElement('div');
       item.className = 'result-item';
       const t = document.createElement('div');
       t.className = 'title';
-      t.textContent = r.title;
+      t.textContent = `${r.pageTitle} · ${r.scope}`;
       const s = document.createElement('div');
       s.className = 'snippet';
-      s.textContent = r.snippet || '';
+      s.innerHTML = r.snippetHtml || '';
       item.appendChild(t);
       item.appendChild(s);
-      item.onclick = () => { location.hash = `#/${r.catId}/${r.pageId}`; };
+      item.onclick = () => {
+        window.__pendingAnchor = r.anchorId;
+        window.__pendingSearchTerm = input;
+        location.hash = `#/${r.catId}/${r.pageId}`;
+      };
       resultsEl.appendChild(item);
     });
   }
@@ -433,6 +460,7 @@ async function main() {
   setupThemeToggle();
   setupLightbox();
   setupTopActions();
+  setupMenuToggle();
 }
 
 function slugify(text) {
@@ -552,6 +580,7 @@ async function loadCategoryIndex(catId) {
   renderSidebar();
   updatePrevNextForCategory(catId);
   window.scrollTo({ top: 0, behavior: 'auto' });
+  document.body.classList.remove('show-sidebar');
 }
 
 function setupCategoryCards(catId) {
@@ -620,6 +649,58 @@ function setupTopActions() {
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     };
   }
+}
+
+function setupMenuToggle() {
+  const btn = document.getElementById('menu-toggle');
+  const overlay = document.getElementById('mobile-overlay');
+  if (btn) btn.onclick = () => { document.body.classList.toggle('show-sidebar'); };
+  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); };
+}
+
+async function ensureSearchIndex() {
+  if (state.searchIndex) return;
+  const list = [];
+  for (const cat of state.manifest.categories) {
+    for (const p of cat.pages) {
+      list.push({ catId: cat.id, pageId: p.id, pageTitle: p.title, file: p.file });
+      if (p.children) p.children.forEach(c => list.push({ catId: cat.id, pageId: c.id, pageTitle: c.title, file: c.file }));
+    }
+  }
+  const index = [];
+  for (const it of list) {
+    const res = await fetch(`content/${it.file}`);
+    const md = await res.text();
+    const tokens = marked.lexer(md);
+    let lastHeadingId = null;
+    index.push({ type: 'title', text: it.pageTitle, anchorId: null, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
+    tokens.forEach(tok => {
+      if (tok.type === 'heading') {
+        const id = slugify(tok.text || '');
+        lastHeadingId = id;
+        index.push({ type: 'heading', text: tok.text || '', anchorId: id, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
+      } else if (tok.type === 'paragraph' || tok.type === 'text') {
+        const t = typeof tok.text === 'string' ? tok.text.replace(/[#*_`>\-]/g, ' ') : '';
+        if (t.trim()) index.push({ type: 'paragraph', text: t, anchorId: lastHeadingId, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
+      } else if (tok.type === 'list') {
+        const t = (tok.items || []).map(i => i.text).join(' ');
+        if (t.trim()) index.push({ type: 'paragraph', text: t, anchorId: lastHeadingId, catId: it.catId, pageId: it.pageId, pageTitle: it.pageTitle });
+      }
+    });
+  }
+  state.searchIndex = index;
+}
+
+function highlightInDoc(term) {
+  const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const container = document.getElementById('doc-body');
+  const nodes = Array.from(container.querySelectorAll('h1, h2, h3, h4, h5, p, li'));
+  nodes.forEach(el => {
+    if (el.closest('pre, code')) return;
+    const html = el.innerHTML;
+    const replaced = html.replace(re, m => `<mark>${m}</mark>`);
+    if (replaced !== html) el.innerHTML = replaced;
+  });
 }
 
 function updateTOCActive() {
