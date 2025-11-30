@@ -210,6 +210,7 @@ async function loadDoc(catId, pageId) {
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.body.classList.remove('show-sidebar');
   document.body.classList.remove('show-toc');
+  document.body.style.overflow = '';
   if (window.__pendingSearchTerm) {
     if (window.__pendingAnchor) {
       ensureSectionVisible(window.__pendingAnchor);
@@ -593,6 +594,7 @@ async function loadCategoryIndex(catId) {
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.body.classList.remove('show-sidebar');
   document.body.classList.remove('show-toc');
+  document.body.style.overflow = '';
 }
 
 function setupCategoryCards(catId) {
