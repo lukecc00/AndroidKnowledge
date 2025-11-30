@@ -1,4 +1,4 @@
-# Android 知识库（GitHub Pages 静态站点）
+# 菜鸟的Android知识博物馆
 
 这是一个完全静态、可直接部署到 GitHub Pages 的 Android 知识分享网站。无需服务端，所有内容以 Markdown 存储，支持分类、页面导航与站内搜索。
 
