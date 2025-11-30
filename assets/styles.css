@@ -114,10 +114,14 @@ body {
   .brand h1 { display: none; }
   .search-box { flex: 1; }
   .search-box input { width: 100%; max-width: 100%; }
-  .content { padding: 16px; }
+  .content { padding: 16px; max-width: 100%; }
   .toc { display: none; }
-  .sidebar { position: fixed; left: 0; top: 60px; width: 82vw; max-width: 320px; height: calc(100vh - 60px); box-shadow: 2px 0 12px rgba(0,0,0,.12); transform: translateX(-100%); transition: transform .24s ease; z-index: 20; }
+  .sidebar { position: fixed; left: 0; top: 60px; width: 82vw; max-width: 320px; height: calc(100vh - 60px); box-shadow: 2px 0 12px rgba(0,0,0,.12); transform: translateX(-100%); transition: transform .24s ease; z-index: 20; overflow: auto; pointer-events: none; }
   .show-sidebar .sidebar { transform: translateX(0); }
+  .show-sidebar .sidebar { pointer-events: auto; }
+  .doc-body pre { white-space: pre-wrap; word-break: break-word; }
+  .breadcrumb { flex-wrap: wrap; }
+  .bottom-nav { grid-template-columns: 1fr; }
 }
 
 .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; z-index: 15; }
