@@ -126,6 +126,11 @@ body {
   .bottom-nav { grid-template-columns: 1fr; }
   /* Mobile-only show menu button */
   #menu-toggle { display: inline-flex; }
+  /* Align logo to the same square size as buttons */
+  .brand .logo { width: 36px; height: 36px; padding: 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  /* Ensure theme toggle emoji centered and sized */
+  #theme-toggle.icon-btn { font-size: 18px; line-height: 1; }
+}
   .doc-body table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .doc-body pre code { white-space: pre-wrap; word-break: break-word; }
   .doc-body ul, .doc-body ol { padding-left: 20px; }
