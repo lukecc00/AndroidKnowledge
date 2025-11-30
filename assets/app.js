@@ -341,7 +341,8 @@ async function performSearch(q) {
   bodyEl.innerHTML = '';
   resultsEl.innerHTML = '';
   const toolbar = document.getElementById('doc-toolbar'); if (toolbar) toolbar.hidden = true;
-  document.getElementById('bottom-nav').hidden = true;
+  const bottomNavEl = document.getElementById('bottom-nav');
+  if (bottomNavEl) { bottomNavEl.hidden = true; bottomNavEl.style.display = 'none'; }
   const bc = document.getElementById('breadcrumb');
   if (bc) bc.innerHTML = `<span class="current">搜索结果</span>`;
   if (matches.length === 0) {

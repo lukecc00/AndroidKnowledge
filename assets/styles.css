@@ -113,8 +113,8 @@ body {
   .site-header { gap: 15px; }
   .site-main { grid-template-columns: 1fr; }
   .brand h1 { display: none; }
-  .search-box { flex: 1; gap: 8px; }
-  .search-box input { flex: 0 1 68vw; width: auto; max-width: 68vw; }
+  .search-box { flex: 1; gap: 12px; align-items: center; }
+  .search-box input { flex: 0 1 66vw; width: auto; max-width: 66vw; height: 36px; padding: 0 12px; box-sizing: border-box; }
   .content { padding: 16px; max-width: 100%; }
   .doc-body { padding-bottom: 24px; }
   .doc-body h1, .doc-body h2 { margin-top: 18px; }
@@ -124,7 +124,7 @@ body {
   .show-sidebar .sidebar { pointer-events: auto; }
   .doc-body pre { white-space: pre-wrap; word-break: break-word; }
   .breadcrumb { flex-wrap: wrap; }
-  .bottom-nav { grid-template-columns: 1fr; }
+  .bottom-nav { grid-template-columns: 1fr; width: 100%; }
   /* Mobile-only show menu button */
   #menu-toggle { display: inline-flex; }
   /* Align logo to the same square size as buttons */
@@ -135,6 +135,12 @@ body {
   .doc-body table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .doc-body pre code { white-space: pre-wrap; word-break: break-word; }
   .doc-body ul, .doc-body ol { padding-left: 20px; }
+}
+
+@media (max-width: 420px) {
+  .site-header { gap: 10px; padding: 10px 12px; }
+  .search-box { gap: 8px; }
+  .search-box input { flex-basis: 100%; max-width: 100%; }
 }
 
 .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; z-index: 20; }
