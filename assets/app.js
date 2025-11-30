@@ -209,6 +209,7 @@ async function loadDoc(catId, pageId) {
   updatePrevNext(catId, pageId);
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.body.classList.remove('show-sidebar');
+  document.body.classList.remove('show-toc');
   if (window.__pendingSearchTerm) {
     if (window.__pendingAnchor) {
       ensureSectionVisible(window.__pendingAnchor);
@@ -462,6 +463,7 @@ async function main() {
   setupLightbox();
   setupTopActions();
   setupMenuToggle();
+  setupTocToggle();
   if ('serviceWorker' in navigator) {
     try {
       const reg = await navigator.serviceWorker.register('assets/sw.js');
@@ -590,6 +592,7 @@ async function loadCategoryIndex(catId) {
   updatePrevNextForCategory(catId);
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.body.classList.remove('show-sidebar');
+  document.body.classList.remove('show-toc');
 }
 
 function setupCategoryCards(catId) {
@@ -664,7 +667,12 @@ function setupMenuToggle() {
   const btn = document.getElementById('menu-toggle');
   const overlay = document.getElementById('mobile-overlay');
   if (btn) btn.onclick = () => { document.body.classList.toggle('show-sidebar'); };
-  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); };
+  if (overlay) overlay.onclick = () => { document.body.classList.remove('show-sidebar'); document.body.classList.remove('show-toc'); };
+}
+
+function setupTocToggle() {
+  const btn = document.getElementById('toc-toggle');
+  if (btn) btn.onclick = () => { document.body.classList.toggle('show-toc'); };
 }
 
 async function ensureSearchIndex() {
