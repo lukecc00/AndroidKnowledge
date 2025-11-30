@@ -449,6 +449,7 @@ function ensureSectionVisible(id) {
 }
 
 async function main() {
+  setupMarkdown();
   await loadVersion();
   await loadManifest();
   renderSidebar();
@@ -837,4 +838,22 @@ function updatePrevNextForCategory(catId) {
   }
   bottom.style.display = bottom.hidden ? 'none' : 'flex';
   bottom.style.justifyContent = (visiblePrev && visibleNext) ? 'space-between' : (visibleNext ? 'flex-end' : 'flex-start');
+}
+function setupMarkdown() {
+  if (typeof marked !== 'undefined') {
+    marked.setOptions({
+      langPrefix: 'language-',
+      highlight: (code, lang) => {
+        if (typeof hljs !== 'undefined') {
+          try {
+            if (lang && hljs.getLanguage(lang)) {
+              return hljs.highlight(code, { language: lang }).value;
+            }
+            return hljs.highlightAuto(code).value;
+          } catch (e) { return code; }
+        }
+        return code;
+      },
+    });
+  }
 }
