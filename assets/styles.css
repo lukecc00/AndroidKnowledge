@@ -118,6 +118,8 @@ body {
   .content { padding: 16px; max-width: 100%; }
   .doc-body { padding-bottom: 24px; }
   .doc-body h1, .doc-body h2 { margin-top: 18px; }
+  .doc-body h1 { font-size: 24px; }
+}
   .toc { display: none; }
   .sidebar { position: fixed; left: 0; top: 60px; width: 82vw; max-width: 320px; height: calc(100vh - 60px); box-shadow: 2px 0 12px rgba(0,0,0,.12); transform: translateX(-100%); transition: transform .24s ease; z-index: 32; overflow: auto; pointer-events: none; }
   .show-sidebar .sidebar { transform: translateX(0); }
@@ -198,6 +200,7 @@ body {
 .doc-body h2 { font-size: 22px; }
 .doc-body h3 { font-size: 18px; }
 .doc-body h4 { font-size: 16px; }
+.doc-body h1 { font-size: 26px; }
 .sidebar a { font-size: 14px; }
 .sidebar .page-row { font-size: 14px; }
 .doc-title.has-children { cursor: pointer; }
