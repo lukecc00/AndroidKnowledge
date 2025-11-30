@@ -122,6 +122,9 @@ body {
   .doc-body pre { white-space: pre-wrap; word-break: break-word; }
   .breadcrumb { flex-wrap: wrap; }
   .bottom-nav { grid-template-columns: 1fr; }
+  .doc-body table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .doc-body pre code { white-space: pre-wrap; word-break: break-word; }
+  .doc-body ul, .doc-body ol { padding-left: 20px; }
 }
 
 .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; z-index: 15; }
